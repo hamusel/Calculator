@@ -34,7 +34,7 @@ function eval(operator, num1, num2) {
     }
 }
 
-
+let displayNumber = "";
 let num1 = NaN;
 let num2 = 0;
 let operator = "";
@@ -44,22 +44,23 @@ let operator = "";
 const numbers = document.querySelectorAll(".number");
 numbers.forEach(button => {
     button.addEventListener("click", () => {
-        display.textContent = button.innerText;
-        if (isNaN(num1) && operator === "") {
-            num1 = button.innerText;
-        } else if (!isNaN(num2) && operator !== "") {
-            num2 = button.innerText;
-            eval(operator, num1, num2);
+        displayNumber += button.innerText;
+        display.textContent = displayNumber;
+
+        if (isNaN(num1)) {
+            num1 = parseFloat(displayNumber);
         }
+
     })
 })
 
 const operators = document.querySelectorAll(".operator");
-numbers.forEach(button => {
+operators.forEach(button => {
     button.addEventListener("click", () => {
         if (!isNaN(num1)) {
-            display.textContent = button.innerText;
             operator = button.innerText;
+            displayNumber += operator;
+            display.textContent = displayNumber;
         }
     })
 })
