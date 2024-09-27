@@ -30,43 +30,32 @@ function eval(operator, num1, num2) {
     }
 }
 
-let displayNumber1 = "";
-let displayNumber2 = "";
+let buildingNumber1 = "";
+let buildingNumber2 = "";
+let displayOnCalculator = ""
 let num1 = NaN;
 let num2 = NaN;
 let operator = "";
+let twoNumbers = false;
 
 
 const numbers = document.querySelectorAll(".number");
 numbers.forEach(button => {
     button.addEventListener("click", () => {
 
-        if (isNaN(num1)) {
-            displayNumber1 += button.innerText;
-            display.textContent = displayNumber1;
-            num1 = parseFloat(displayNumber1);
-        }
-
-        else {
-            displayNumber2 = displayNumber1;
-            displayNumber2 += button.innerText;
-            display.textContent = displayNumber2;
+        if (operator === "") {
+            buildingNumber1 += button.innerText;
+            displayOnCalculator = buildingNumber1;
+            display.textContent = displayOnCalculator;
+            num1 = parseFloat(buildingNumber1);
+        } else {
+            buildingNumber2 += button.innerText;
+            displayOnCalculator += button.innerText;
+            display.textContent = displayOnCalculator;
             num2 = parseFloat(button.innerText);
+            twoNumbers = true;
         }
 
-        // displayNumber1 += button.innerText;
-        // display.textContent = displayNumber1;
-        //
-        // if (isNaN(num1)) {
-        //     num1 = parseFloat(displayNumber1);
-        //     alert("num1 is now" + num1);
-        // } else if (!isNaN(num1) && operator !== "") {
-        //     num2 = parseFloat(button.innerText);
-        //     alert("num2 is now" + num2);
-        // }
-
-        // Am un num1? Daca nu, il voi construi pana primesc un operator
-        // Am un num1? Daca da, voi construi un al doilea numar pana la egal/operator
 
     })
 })
@@ -74,27 +63,51 @@ numbers.forEach(button => {
 const operators = document.querySelectorAll(".operator");
 operators.forEach(button => {
     button.addEventListener("click", () => {
-        operator = button.innerText;
+        if (!twoNumbers) {
+            operator = button.innerText;
 
-        if (isNaN(displayNumber1[displayNumber1.length - 1])) {
-            displayNumber1 = displayNumber1.slice(0, -1) + operator;
+            if (isNaN(displayOnCalculator[displayOnCalculator.length - 1])) {
+                displayOnCalculator = displayOnCalculator.slice(0, -1) + operator;
+            } else {
+                displayOnCalculator += operator;
+            }
+
+            display.textContent = displayOnCalculator;
         } else {
-            displayNumber1 += operator;
+            displayOnCalculator = eval(operator, num1, num2);
+            buildingNumber1 = "";
+            buildingNumber2 = "";
+            num1 = parseFloat(displayOnCalculator);
+            num2 = NaN;
+            display.textContent = displayOnCalculator;
+            twoNumbers = false;
+            operator = "";
         }
-
-        display.textContent = displayNumber1;
     });
 });
 
 const equals = document.querySelector("#equals");
 equals.addEventListener("click", () => {
-    console.log(num1)
-    console.log(num2)
-    console.log(operator)
-    if (!isNaN(num1) && !isNaN(num2) && operator !== "") {
-        displayNumber1 = eval(operator, num1, num2);
-        num1 = parseFloat(displayNumber1);
-        display.textContent = displayNumber1;
+    if (twoNumbers) {
+        twoNumbers = false;
+        displayOnCalculator = eval(operator, num1, num2);
+        num1 = parseFloat(displayOnCalculator);
+        display.textContent = displayOnCalculator;
+        num2 = NaN;
+        buildingNumber1 = "";
+        buildingNumber2 = "";
+        operator = "";
     }
 
 })
+
+
+// Avem variabilele num1, num2, operator, buildingNumber1, buildingNumber2, displayOnCalculator si twoNumbers
+// la inceput num1=NaN, num2=NaN, operator="", buildingNumber1="", buildingNumber2="", displayOnCalculator="" si twoNumbers=false
+// apasam pe numere si verificam daca operatorul e ""
+    // este "", incepem sa construim in buildingNumber1 cu += si num1 ii ia valoarea prin parseFloat()
+    // nu este operatorul "", inseamna ca avem deja un num1 => construim in buildingNumber2 cu += si num2 ii ia valoarea, twoNumbers devine true
+// operatorul verifica daca avem deja doua numere
+    // daca da => aplicam eval() pe num1, resetam displayOnCalculator, buildingNumber1 num1 devine rezultatul lui eval() num2 devine NaN, buildingNumber2 se intoarce la "", twoNumbers devine false si operator=""
+    // daca nu => adaugam operatorul la displayOnCalculator/inlocuim
+// equals verifica sa avem 2 numere, ii da valoarea lui num1 si reseateaza num2, operatorul, building-urile, twoNumbers si pe displayOnCalculator il face sa aiba valoarea lui eval()
