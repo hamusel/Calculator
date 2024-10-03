@@ -7,11 +7,18 @@ function multiply(a, b) {
 }
 
 function divide(a, b) {
-    return a / b;
+    if (b === 0) {
+        return "Error, please press A/C";
+    }
+    return Math.round(a / b * 100000) / 100000;
 }
 
 function subtract(a, b) {
     return a - b;
+}
+
+function isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
 }
 
 const display = document.querySelector("#display");
@@ -33,7 +40,7 @@ function eval(operator, num1, num2) {
 let buildingNumber1 = "";
 let buildingNumber2 = "";
 let displayOnCalculator = ""
-let num1 = NaN;
+let num1 = 0;
 let num2 = NaN;
 let operator = "";
 let twoNumbers = false;
@@ -42,24 +49,22 @@ let twoNumbers = false;
 const numbers = document.querySelectorAll(".number");
 numbers.forEach(button => {
     button.addEventListener("click", () => {
+        if (displayOnCalculator !== "Error, please press A/C") {
+            if (operator === "") {
+                buildingNumber1 += button.innerText;
+                displayOnCalculator = buildingNumber1;
+                display.textContent = displayOnCalculator;
+                num1 = parseFloat(buildingNumber1);
+            } else {
+                buildingNumber2 += button.innerText;
+                displayOnCalculator += button.innerText;
+                display.textContent = displayOnCalculator;
+                num2 = parseFloat(buildingNumber2);
+                twoNumbers = true;
+            }
 
-        if (operator === "") {
-            buildingNumber1 += button.innerText;
-            displayOnCalculator = buildingNumber1;
-            display.textContent = displayOnCalculator;
-            num1 = parseFloat(buildingNumber1);
-        } else {
-            buildingNumber2 += button.innerText;
-            displayOnCalculator += button.innerText;
-            display.textContent = displayOnCalculator;
-            num2 = parseFloat(buildingNumber2);
-            twoNumbers = true;
+
         }
-
-        console.log("b1 " + buildingNumber1, "b2 " + buildingNumber2, "n1 " + num1, "n2 " + num2,
-            "op" + operator, "2numbers" + twoNumbers);
-
-
     })
 })
 
@@ -69,17 +74,27 @@ operators.forEach(btn => {
     btn.addEventListener("click", () => {
         if (twoNumbers) {
             displayOnCalculator = eval(operator, num1, num2);
-            num1 = parseFloat(displayOnCalculator);
-            num2 = NaN;
-            buildingNumber1 = num1.toString();
-            buildingNumber2 = "";
-            twoNumbers = false;
-            operator = "";
-            display.textContent = displayOnCalculator;
+            if (isFloat(displayOnCalculator)) {
+                num1 = parseFloat(displayOnCalculator);
+                num2 = NaN;
+                buildingNumber1 = num1.toString();
+                buildingNumber2 = "";
+                twoNumbers = false;
+                operator = "";
+                display.textContent = displayOnCalculator;
+            } else {
+                buildingNumber1 = "";
+                buildingNumber2 = "";
+                num1 = 0;
+                num2 = NaN;
+                operator = "";
+                twoNumbers = false;
+                display.textContent = displayOnCalculator;
+            }
 
         }
 
-        if (!twoNumbers) {
+        if (!twoNumbers && displayOnCalculator !== "Error, please press A/C") {
             operator = btn.innerText;
             if (displayOnCalculator[displayOnCalculator.length - 1] === "+" ||
                 displayOnCalculator[displayOnCalculator.length - 1] === "-" ||
@@ -92,8 +107,6 @@ operators.forEach(btn => {
             display.textContent = displayOnCalculator;
         }
 
-        console.log("b1 " + buildingNumber1, "b2 " + buildingNumber2, "n1 " + num1, "n2 " + num2,
-            "op" + operator, "2numbers" + twoNumbers);
     })
 })
 
@@ -110,18 +123,18 @@ equals.addEventListener("click", () => {
         operator = "";
     }
 
-    console.log("b1 " + buildingNumber1, "b2 " + buildingNumber2, "n1 " + num1, "n2 " + num2,
-        "op " + operator, "2numbers " + twoNumbers);
-
 })
 
+const ac = document.querySelector("#AC");
+ac.addEventListener("click", () => {
+    buildingNumber1 = "";
+    buildingNumber2 = "";
+    displayOnCalculator = "0"
+    num1 = 0;
+    num2 = NaN;
+    operator = "";
+    twoNumbers = false;
+    display.textContent = displayOnCalculator;
+})
 
-// Avem variabilele num1, num2, operator, buildingNumber1, buildingNumber2, displayOnCalculator si twoNumbers
-// la inceput num1=NaN, num2=NaN, operator="", buildingNumber1="", buildingNumber2="", displayOnCalculator="" si twoNumbers=false
-// apasam pe numere si verificam daca operatorul e ""
-// este "", incepem sa construim in buildingNumber1 cu += si num1 ii ia valoarea prin parseFloat()
-// nu este operatorul "", inseamna ca avem deja un num1 => construim in buildingNumber2 cu += si num2 ii ia valoarea, twoNumbers devine true
-// operatorul verifica daca avem deja doua numere
-// daca da => aplicam eval() pe num1, resetam displayOnCalculator, buildingNumber1 num1 devine rezultatul lui eval() num2 devine NaN, buildingNumber2 se intoarce la "", twoNumbers devine false si operator=""
-// daca nu => adaugam operatorul la displayOnCalculator/inlocuim
-// equals verifica sa avem 2 numere, ii da valoarea lui num1 si reseateaza num2, operatorul, building-urile, twoNumbers si pe displayOnCalculator il face sa aiba valoarea lui eval()
+//TODO: decimal calculations, negative numbers, percent, C button?, CSS improvement
