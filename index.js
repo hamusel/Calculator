@@ -37,6 +37,10 @@ function eval(operator, num1, num2) {
     }
 }
 
+function calculatePercent(num1) {
+    return num1 / 100;
+}
+
 let buildingNumber1 = "";
 let buildingNumber2 = "";
 let displayOnCalculator = ""
@@ -137,4 +141,47 @@ ac.addEventListener("click", () => {
     display.textContent = displayOnCalculator;
 })
 
-//TODO: decimal calculations, negative numbers, percent, C button?, CSS improvement
+let positive = true;
+
+const sign = document.querySelector("#sign");
+sign.addEventListener("click", () => {
+    positive = !num1.toString().startsWith("-");
+    positive = !positive;
+    if (!twoNumbers) {
+        buildingNumber1 = !positive ? "-" + buildingNumber1 : buildingNumber1.slice(-1, buildingNumber1.length);
+        displayOnCalculator = buildingNumber1;
+        num1 = parseFloat(displayOnCalculator);
+        display.textContent = displayOnCalculator;
+    }
+})
+
+const percent = document.querySelector("#percent");
+percent.addEventListener("click", () => {
+    if (!twoNumbers) {
+        buildingNumber1 = calculatePercent(num1);
+        displayOnCalculator = buildingNumber1;
+        num1 = parseFloat(displayOnCalculator);
+        display.textContent = displayOnCalculator;
+        console.log("bn1 " + buildingNumber1 + "displayOnCalculator " + displayOnCalculator + "num1 " + num1);
+    }
+})
+
+
+const decimal = document.querySelector("#decimal");
+decimal.addEventListener("click", () => {
+    if (!twoNumbers && !isFloat(num1)) {
+        buildingNumber1 = buildingNumber1 + ".";
+        displayOnCalculator = buildingNumber1;
+        num1 = parseFloat(displayOnCalculator);
+        display.textContent = displayOnCalculator;
+    }
+    else if (twoNumbers && !isFloat(num2)) {
+        buildingNumber2 = buildingNumber2 + ".";
+        displayOnCalculator = displayOnCalculator + ".";
+        num2 = parseFloat(buildingNumber2);
+        display.textContent = displayOnCalculator;
+    }
+
+})
+
+//TODO: CSS improvement
