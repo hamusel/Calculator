@@ -69,7 +69,6 @@ numbers.forEach(button => {
 
 
         }
-        console.log("buildingn1 ", buildingNumber1);
     })
 })
 
@@ -117,7 +116,7 @@ operators.forEach(btn => {
 
 const equals = document.querySelector("#equals");
 equals.addEventListener("click", () => {
-    if (twoNumbers) {
+    if (twoNumbers && displayOnCalculator !== "Error, please press A/C") {
         twoNumbers = false;
         displayOnCalculator = eval(operator, num1, num2);
         num1 = parseFloat(displayOnCalculator);
@@ -144,9 +143,9 @@ ac.addEventListener("click", () => {
 
 const sign = document.querySelector("#sign");
 sign.addEventListener("click", () => {
-    let positive = !num1.toString().startsWith("-"); //positive e false
-    positive = !positive; // positive devine true
-    if (!twoNumbers) {
+    let positive = !num1.toString().startsWith("-");
+    positive = !positive;
+    if (!twoNumbers && displayOnCalculator !== "Error, please press A/C") {
         buildingNumber1 = !positive ? "-" + buildingNumber1 : buildingNumber1.replace("-", "");
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
@@ -154,14 +153,11 @@ sign.addEventListener("click", () => {
     }
 
     console.log("positive " + positive + " " + "bn1 " + buildingNumber1 + " " + "displayOnCalculator " + displayOnCalculator + " " + "num1 " + num1);
-    /// verifica daca numarul e pozitiv
-    /// Daca e pozitiv -> devine negativ si adauga un "-" la inceput
-    /// daca e negativ -> elimina "-" la inceput
 })
 
 const percent = document.querySelector("#percent");
 percent.addEventListener("click", () => {
-    if (!twoNumbers) {
+    if (!twoNumbers && displayOnCalculator !== "Error, please press A/C") {
         buildingNumber1 = calculatePercent(num1);
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
@@ -172,7 +168,7 @@ percent.addEventListener("click", () => {
 
 const decimal = document.querySelector("#decimal");
 decimal.addEventListener("click", () => {
-    if (!twoNumbers && !isFloat(num1)) {
+    if (!twoNumbers && !isFloat(num1) && displayOnCalculator !== "Error, please press A/C") {
         buildingNumber1 = buildingNumber1 + ".";
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
@@ -185,5 +181,3 @@ decimal.addEventListener("click", () => {
     }
 
 })
-
-//TODO: CSS improvement
