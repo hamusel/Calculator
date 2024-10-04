@@ -69,6 +69,7 @@ numbers.forEach(button => {
 
 
         }
+        console.log("buildingn1 ", buildingNumber1);
     })
 })
 
@@ -141,18 +142,21 @@ ac.addEventListener("click", () => {
     display.textContent = displayOnCalculator;
 })
 
-let positive = true;
-
 const sign = document.querySelector("#sign");
 sign.addEventListener("click", () => {
-    positive = !num1.toString().startsWith("-");
-    positive = !positive;
+    let positive = !num1.toString().startsWith("-"); //positive e false
+    positive = !positive; // positive devine true
     if (!twoNumbers) {
-        buildingNumber1 = !positive ? "-" + buildingNumber1 : buildingNumber1.slice(-1, buildingNumber1.length);
+        buildingNumber1 = !positive ? "-" + buildingNumber1 : buildingNumber1.replace("-", "");
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
         display.textContent = displayOnCalculator;
     }
+
+    console.log("positive " + positive + " " + "bn1 " + buildingNumber1 + " " + "displayOnCalculator " + displayOnCalculator + " " + "num1 " + num1);
+    /// verifica daca numarul e pozitiv
+    /// Daca e pozitiv -> devine negativ si adauga un "-" la inceput
+    /// daca e negativ -> elimina "-" la inceput
 })
 
 const percent = document.querySelector("#percent");
@@ -162,7 +166,6 @@ percent.addEventListener("click", () => {
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
         display.textContent = displayOnCalculator;
-        console.log("bn1 " + buildingNumber1 + "displayOnCalculator " + displayOnCalculator + "num1 " + num1);
     }
 })
 
@@ -174,8 +177,7 @@ decimal.addEventListener("click", () => {
         displayOnCalculator = buildingNumber1;
         num1 = parseFloat(displayOnCalculator);
         display.textContent = displayOnCalculator;
-    }
-    else if (twoNumbers && !isFloat(num2)) {
+    } else if (twoNumbers && !isFloat(num2)) {
         buildingNumber2 = buildingNumber2 + ".";
         displayOnCalculator = displayOnCalculator + ".";
         num2 = parseFloat(buildingNumber2);
